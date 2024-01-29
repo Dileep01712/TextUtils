@@ -28,11 +28,23 @@
   color: #61dafb;
 }
 
+.container-fluid a {
+  color: white !important;
+  ;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-toggler-icon {
+    background-color: white;
   }
 }

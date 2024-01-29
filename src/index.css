@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.accordion-button::after {
+  filter: invert(1);
+  background-color: white !important;
+  border-radius: 3px;
+}
