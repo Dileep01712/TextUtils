@@ -20,10 +20,29 @@ export default function TextForm(props) {
     }
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(text);
-        document.getSelection().removeAllRanges();
-        props.showAlert("Text copied to clipboard.", 'success');
-    }
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    document.getSelection().removeAllRanges();
+                    props.showAlert("Text copied to clipboard.", 'success');
+                })
+                .catch((err) => {
+                    props.showAlert("Error copying text to clipboard.", 'danger');
+                });
+        } else {
+            try {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                props.showAlert("Text copied to clipboard.", 'success');
+            } catch (err) {
+                props.showAlert("Error copying text to clipboard.", 'danger');
+            }
+        }
+    };
 
     const handleExtraSpaces = () => {
         let newText = text.trim().replace(/\s+/g, ' ');
@@ -88,7 +107,7 @@ export default function TextForm(props) {
                 <button className="btn btn-primary mx-2 my-1" onClick={handleCopy} disabled={!text.trim()}>Copy Text</button>
                 <button className="btn btn-primary mx-2 my-1" onClick={handleClearClick} disabled={!text.trim()}>Clear Text</button>
             </div>
-            <div className="container my-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>
+            <div className="container my-3" id='showText' style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>
                 <h2>Your text summary</h2>
                 <p>{countWords(text)} words and {text.length} characters</p>
                 <p>{formattedTime} estimated reading time</p>
